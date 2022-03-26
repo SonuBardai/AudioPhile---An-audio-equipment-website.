@@ -1,0 +1,22 @@
+{% extends 'shop/base.html' %} {% load tailwind_filters %} {% block body %}
+<div class="w-[650px] mx-auto my-6">
+<div class="text-3xl font-bold text-gray-800 text-center mb-3">Delete Item?</div>
+  <form method="post" class="w-full">
+    {% csrf_token %}
+    <div class="flex w-[300px] mx-auto">
+        <button
+          class="bg-red-500 hover:bg-red-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white mx-auto my-5"
+          type = "submit"
+        >
+          Confirm
+        </button>
+        <a
+          class="bg-gray-500 hover:bg-gray-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white mx-auto my-5"
+          href="{% url 'shop' %}"
+        >
+          Cancel
+        </a>
+    </div>
+  </form>
+</div>
+{% endblock body %}

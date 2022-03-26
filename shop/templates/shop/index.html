@@ -1,0 +1,174 @@
+{% extends 'shop/base.html' %} {% block body %} {% load static %}
+<style>
+  .carousel-item {
+    height: 75vh;
+  }
+  .carousel-item img {
+    transform: translateY(-15%);
+  }
+</style>
+
+<div
+  id="carouselExampleIndicators"
+  class="carousel slide relative"
+  data-bs-ride="carousel"
+>
+  <div
+    class="carousel-indicators absolute right-0 bottom-0 left-0 flex justify-center p-0 mb-4"
+  >
+    <button
+      type="button"
+      data-bs-target="#carouselExampleIndicators"
+      data-bs-slide-to="0"
+      class="active"
+      aria-current="true"
+      aria-label="Slide 1"
+    ></button>
+    <button
+      type="button"
+      data-bs-target="#carouselExampleIndicators"
+      data-bs-slide-to="1"
+      aria-label="Slide 2"
+    ></button>
+  </div>
+
+  <div class="carousel-inner relative w-full overflow-hidden">
+    <div class="carousel-item active float-left w-full">
+      <img
+        src="{% static 'shop/images/tape.jpg' %}"
+        class="block w-full bg-cover"
+        alt="Headphones"
+      />
+      <div class="absolute top-6 left-[200px] text-white font-bold text-6xl">
+        Welcome to
+        <div class="inline font-['Montserrat']">AudioPhile</div>
+      </div>
+      <a href="" class="cursor-pointer">
+        <div
+          href=""
+          class="absolute top-[150px] right-[150px] border-[2px] bg-orange-900 rounded-full flex px-2 py-2"
+        >
+          <div class="text-white text-3xl font-bold pr-3">Shop</div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="40px"
+            viewBox="0 0 24 24"
+            width="40px"
+            fill="#FFFFFF"
+          >
+            <path d="M0 0h24v24H0V0z" fill="none" />
+            <path
+              d="M18.36 9l.6 3H5.04l.6-3h12.72M20 4H4v2h16V4zm0 3H4l-1 5v2h1v6h10v-6h4v6h2v-6h1v-2l-1-5zM6 18v-4h6v4H6z"
+            />
+          </svg>
+        </div>
+      </a>
+    </div>
+
+    <div class="carousel-item relative float-left w-full">
+      <img
+        src="{% static 'shop/images/5.jpg' %}"
+        class="block w-full"
+        alt="Headphones"
+      />
+      <div class="absolute top-6 left-[200px] text-white font-bold text-6xl">
+        All new Mark-XII Beazt
+        <a class="absolute top-[90px] left-[250px] text-gray-400 font-bold underline text-4xl" href="">See Product</a>
+      </div>
+    </div>
+  </div>
+
+  <button
+    class="carousel-control-prev absolute top-0 bottom-0 flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline left-0"
+    type="button"
+    data-bs-target="#carouselExampleIndicators"
+    data-bs-slide="prev"
+  >
+    <span
+      class="carousel-control-prev-icon inline-block bg-no-repeat"
+      aria-hidden="true"
+    ></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button
+    class="carousel-control-next absolute top-0 bottom-0 flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline right-0"
+    type="button"
+    data-bs-target="#carouselExampleIndicators"
+    data-bs-slide="next"
+  >
+    <span
+      class="carousel-control-next-icon inline-block bg-no-repeat"
+      aria-hidden="true"
+    ></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+
+<!-- CARDS  -->
+<div class="flex justify-center my-10">
+  <div class="rounded-lg shadow-lg bg-white max-w-sm w-[350px] mx-14">
+    <a href="/">
+      <img
+        class="rounded-t-lg"
+        src="{% static 'shop/images/hp-sm.jpg' %}"
+        alt="headphones"
+      />
+    </a>
+    <div class="p-6">
+      <h5 class="text-gray-900 text-xl font-medium mb-2">Headphones</h5>
+      <p class="text-gray-700 text-base mb-4">
+        <a class="" href="">Buy Premium Headphones Here </a>
+      </p>
+      <button
+        type="button"
+        class="inline-block px-6 py-2.5 bg-gray-800 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-700 hover:shadow-lg focus:bg-gray-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-800 active:shadow-lg transition duration-150 ease-in-out"
+      >
+        Shop
+      </button>
+    </div>
+  </div>
+  <div class="rounded-lg shadow-lg bg-white max-w-sm w-[350px] mx-14">
+    <a href="/">
+      <img
+        class="rounded-t-lg"
+        src="{% static 'shop/images/speakers-sm.jpg' %}"
+        alt="speakers"
+      />
+    </a>
+    <div class="p-6">
+      <h5 class="text-gray-900 text-xl font-medium mb-2">Speakers</h5>
+      <p class="text-gray-700 text-base mb-4">
+        <a class="" href="">Buy High-End Speakers Here </a>
+      </p>
+      <button
+        type="button"
+        class="inline-block px-6 py-2.5 bg-gray-800 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-700 hover:shadow-lg focus:bg-gray-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-800 active:shadow-lg transition duration-150 ease-in-out"
+      >
+        Shop
+      </button>
+    </div>
+  </div>
+  <div class="rounded-lg shadow-lg bg-white max-w-sm w-[350px] mx-14">
+    <a href="/">
+      <img
+        class="rounded-t-lg"
+        src="{% static 'shop/images/ep-sm.jpg' %}"
+        alt="speakers"
+      />
+    </a>
+    <div class="p-6">
+      <h5 class="text-gray-900 text-xl font-medium mb-2">Earphones</h5>
+      <p class="text-gray-700 text-base mb-4">
+        <a class="" href="">Buy Luxurious Earphones Here</a>
+      </p>
+      <button
+        type="button"
+        class="inline-block px-6 py-2.5 bg-gray-800 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-700 hover:shadow-lg focus:bg-gray-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-800 active:shadow-lg transition duration-150 ease-in-out"
+      >
+        Shop
+      </button>
+    </div>
+  </div>
+</div>
+
+{% endblock body %}

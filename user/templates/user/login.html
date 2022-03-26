@@ -1,0 +1,16 @@
+{% extends 'shop/base.html' %} {% load tailwind_filters %} {% block body %}
+<div class="w-[650px] mx-auto my-6">
+<div class="text-3xl font-bold text-gray-800 text-center mb-3">Login Now</div>
+  <form method="post" class="w-full">
+    {% csrf_token %} {{ form|crispy }}
+    <div class="w-full">
+        <button
+          class="bg-gray-500 hover:bg-gray-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white mx-auto w-full"
+          type = "submit"
+        >
+          Login
+        </button>
+    </div>
+  </form>
+</div>
+{% endblock body %}
