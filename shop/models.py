@@ -51,3 +51,14 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f'Order_ID: {self.order.id}, Item_ID: {self.item.id}, Q: {self.quantity}'
+
+class ShippingAddress(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    address = models.TextField()
+    city = models.CharField(max_length=150)
+    state = models.CharField(max_length=150)
+    zip_code = models.CharField(max_length=20)
+    phone = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.user.username}'  

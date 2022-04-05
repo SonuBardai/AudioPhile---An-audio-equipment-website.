@@ -16,6 +16,12 @@ function handleClick(id, action) {
     numItems.innerText ++;
   }
 
+  let amount = document.getElementById('amount')
+  if(amount){
+    price = amount.dataset.price 
+    amount.innerText = `$${cart[id]*price}`
+  }
+
   localStorage.setItem("cart", JSON.stringify(cart));
   setTotal()
   updateCartRequest(id, action);

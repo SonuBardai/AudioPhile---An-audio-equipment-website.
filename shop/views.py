@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.http import JsonResponse
 import json
 from django.views.generic import (
@@ -12,14 +13,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.contrib.auth.mixins import UserPassesTestMixin
 
-from shop.models import Item, Order, OrderItem
+from shop.models import Item, Order, OrderItem, ShippingAddress
 
-
-def home(request):
-    context = {
-        'title': 'Home'
-    }
-    return render(request, 'shop/index.html', context)
+from .forms import ShippingAddressForm
 
 
 def createCart(request):
@@ -34,6 +30,14 @@ def createCart(request):
         if not cart.get(item.id):
             cart[item.id] = 0
     return cart
+
+
+def home(request):
+    context = {
+        'title': 'Home',
+        'cart': createCart(request) if request.user.is_authenticated else None
+    }
+    return render(request, 'shop/index.html', context)
 
 
 class ShopItems(ListView):
@@ -119,4 +123,20 @@ def updateCart(request):
 
 
 def checkout(request):
-    return render(request, 'shop/checkout.html')
+    if request.method == 'POST':
+        form = ShippingAddressForm(request.POST)
+        if form.is_valid():
+            address = form.save(commit=False)
+            address.user = request.user
+            address.save()
+            messages.success(request, "Order Placed")
+            return redirect('/')
+    else:
+        address = ShippingAddress.objects.filter(user=request.user).first()
+        
+        if address:
+            form = ShippingAddressForm(instance = address)
+        else:
+            form = ShippingAddressForm()
+        
+        return render(request, 'shop/checkout.html', {'form': form})

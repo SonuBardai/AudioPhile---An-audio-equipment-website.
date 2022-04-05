@@ -175,4 +175,10 @@
   </div>
 </div>
 
+<script>
+  cart = {{ cart | safe }}
+  localStorage.setItem('cart', JSON.stringify(cart))
+  setTotal()
+</script>
+
 {% endblock body %}
