@@ -1,25 +1,34 @@
 function handleClick(id, action) {
   cart = JSON.parse(localStorage.getItem("cart"));
   numItems = document.getElementById(`numItems-${id}`);
-  console.log(numItems);
   
   if (action === "dec") {
       cart[id]--;
       numItems.innerText --;
-      if(!cart[id]){
-        switchButtons()
+      if(cart[id] <= 0){
         let card = document.getElementById(`card-${id}`)
         if(card) card.style.display='none'
+        let emptyCart = document.getElementById('emptyCart')
+        if(emptyCart){
+          emptyCart.style.display = 'block';
+          document.getElementById('notEmptyCart').style.display = 'none';
+        }
       }
   } else {
     cart[id]++;
     numItems.innerText ++;
   }
 
-  let amount = document.getElementById('amount')
-  if(amount){
-    price = amount.dataset.price 
-    amount.innerText = `$${cart[id]*price}`
+  let price = document.getElementById(`price-${id}`)
+  if(price){
+    document.getElementById(`itemTotal-${id}`).innerText = price.innerText*cart[id]
+    itemTotal = document.getElementsByClassName('itemTotal')
+    sum = 0
+    Array.prototype.forEach.call(itemTotal, (itemTot)=>{
+      sum += parseInt(itemTot.innerText)
+      console.log(sum)
+    });
+    document.getElementById('subTotal').innerText = sum
   }
 
   localStorage.setItem("cart", JSON.stringify(cart));
@@ -32,7 +41,6 @@ Array.prototype.forEach.call(decBtns, (dec) => {
   
   dec.addEventListener("click", () => {
     id = dec.dataset.item;
-    console.log(id);
     
     handleClick(id, "dec");
   });

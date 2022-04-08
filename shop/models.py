@@ -9,7 +9,12 @@ from django.contrib.auth.models import User
 
 class Item(models.Model):
     name = models.CharField(max_length=200)
-    category = models.CharField(max_length=100)
+    category = models.CharField(max_length=100, choices=[
+        ('headphones', 'Headphones'),
+        ('speakers', 'Speakers'),
+        ('earphones', 'Earphones'),
+        ('microphones', 'Microphones')
+    ])
     slug = models.CharField(max_length=100, blank=True)
     desc = models.TextField()
     price = models.IntegerField()
@@ -38,6 +43,7 @@ class Order(models.Model):
     date_ordered = models.DateTimeField(auto_now_add=True)
     placed = models.BooleanField(default=False)
     delivered = models.BooleanField(default=False)
+    orderTotal = models.IntegerField(default=0, blank=True)
 
     def __str__(self):
         return f'Order of {self.user.username}, ordered on: {self.date_ordered.strftime("%d-%m-%y")}, status: {self.delivered}'
@@ -48,9 +54,11 @@ class OrderItem(models.Model):
     item = models.OneToOneField(Item, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
     date_added = models.DateTimeField(auto_now_add=True)
+    orderItemTotal = models.IntegerField(default=0, blank=True)
 
     def __str__(self):
         return f'Order_ID: {self.order.id}, Item_ID: {self.item.id}, Q: {self.quantity}'
+
 
 class ShippingAddress(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -61,4 +69,4 @@ class ShippingAddress(models.Model):
     phone = models.IntegerField()
 
     def __str__(self):
-        return f'{self.user.username}'  
+        return f'{self.user.username}'

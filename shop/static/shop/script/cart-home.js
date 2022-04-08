@@ -56,8 +56,8 @@ Array.prototype.forEach.call(dec_btns, (btn) => {
     let numItems = document.getElementById(`numItems-${item_id}`);
     numItems.innerText = cart[item_id];
 
-    totalItems--;
-    document.getElementById("totalItems").innerText = `(${totalItems})`;
+    setTotal()
+    
     updateCartRequest(item_id, 'dec')
   });
 });

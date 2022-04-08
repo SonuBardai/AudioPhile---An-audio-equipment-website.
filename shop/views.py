@@ -11,6 +11,8 @@ from django.views.generic import (
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from django.contrib.auth.decorators import login_required
+
 from django.contrib.auth.mixins import UserPassesTestMixin
 
 from shop.models import Item, Order, OrderItem, ShippingAddress
@@ -22,13 +24,19 @@ def createCart(request):
     items = Item.objects.all()
     cart = dict()
     user = request.user
-    order, created = Order.objects.get_or_create(user=user, placed=False)
-    orderItems = order.orderitem_set.all()
-    for item in orderItems.values_list('item_id', 'quantity'):
-        cart[item[0]] = item[1]
-    for item in items:
-        if not cart.get(item.id):
-            cart[item.id] = 0
+    order = Order.objects.filter(user=user, placed=False).first()
+    if order:
+        orderItems = OrderItem.objects.filter(order = order)
+        if orderItems:
+            for item in orderItems.values_list('item_id', 'quantity'):
+                cart[item[0]] = item[1]
+            for item in items:
+                if not cart.get(item.id):
+                    cart[item.id] = 0
+        else:
+            for item in items:
+                OrderItem.objects.create(order=order, item=item)
+                cart[item.id] = 0
     return cart
 
 
@@ -47,9 +55,15 @@ class ShopItems(ListView):
     ordering = ['-date_listed']
 
     def get_context_data(self, *args, **kwargs):
-        context = super(ShopItems, self).get_context_data(*args, **kwargs)
-        context['cart'] = json.dumps(createCart(self.request))
-        return context
+        if self.request.user.is_authenticated:
+            context = super(ShopItems, self).get_context_data(*args, **kwargs)
+            context['cart'] = json.dumps(createCart(self.request))
+            return context
+        return super().get_context_data(*args, **kwargs)
+
+    def get_queryset(self):
+        cat = self.kwargs['category']
+        return super().get_queryset().filter(category=cat)
 
 
 class DetailItem(DetailView):
@@ -90,13 +104,24 @@ class DeleteItem(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return True if user.is_superuser else False
 
 
+@login_required
 def cart(request):
-    order, created = Order.objects.get_or_create(user=request.user)
-    items = order.orderitem_set.all()
+    try:
+        order = Order.objects.get(user=request.user)
+        items = order.orderitem_set.all()
+    except Order.DoesNotExist:
+        order = Order.objects.create(user=request.user)
+        items = []
+
+    subTotal = order.orderTotal
 
     cart = createCart(request)
 
-    return render(request, 'shop/cart.html', {'items': items, 'cart': cart})
+    return render(request, 'shop/cart.html', {
+        'items': items,
+        'cart': cart,
+        'subTotal': subTotal
+    })
 
 
 def updateCart(request):
@@ -111,6 +136,7 @@ def updateCart(request):
 
         orderItem, created = OrderItem.objects.get_or_create(
             order=order, item=item)
+
         if action == 'inc':
             orderItem.quantity += 1
         else:
@@ -118,10 +144,23 @@ def updateCart(request):
                 orderItem.quantity = 0
             else:
                 orderItem.quantity -= 1
+
+        orderItem.orderItemTotal = orderItem.quantity * orderItem.item.price
+
         orderItem.save()
+
+        orderItems = order.orderitem_set.all()
+        total = 0
+        for i in orderItems:
+            total += (i.quantity * i.item.price)
+
+        order.orderTotal = total
+        order.save()
+
     return JsonResponse(f'{orderItem.item.id}: {orderItem.quantity}', safe=False)
 
 
+@login_required
 def checkout(request):
     if request.method == 'POST':
         form = ShippingAddressForm(request.POST)
@@ -133,10 +172,17 @@ def checkout(request):
             return redirect('/')
     else:
         address = ShippingAddress.objects.filter(user=request.user).first()
-        
+
+        order, created = Order.objects.get_or_create(user=request.user)
+        subTotal = order.orderTotal
+
+        items = order.orderitem_set.all()
+
+        cart = createCart(request)
+
         if address:
-            form = ShippingAddressForm(instance = address)
+            form = ShippingAddressForm(instance=address)
         else:
             form = ShippingAddressForm()
-        
-        return render(request, 'shop/checkout.html', {'form': form})
+
+        return render(request, 'shop/checkout.html', {'form': form, 'items': items, 'subTotal': subTotal})
